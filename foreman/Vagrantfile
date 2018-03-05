@@ -1,0 +1,43 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+    node_name   = "theforeman.example.com"
+
+    config.vbguest.auto_update = true
+    config.vbguest.iso_path = "http://download.virtualbox.org/virtualbox/%{version}/VBoxGuestAdditions_%{version}.iso"
+
+    config.vm.box = "puppetlabs/centos-7.0-64-puppet"
+
+    if Vagrant.has_plugin?("vagrant-cachier")
+        config.cache.scope = :box
+    end
+
+    config.hostmanager.enabled = true
+    config.hostmanager.manage_host = true
+    config.hostmanager.ignore_private_ip = false
+    config.hostmanager.include_offline = true
+
+    config.vm.define node_name do |config|
+
+      config.vm.hostname = node_name
+      config.vm.network "private_network", ip: "192.168.35.5", virtualbox__intnet: "pxe_network"
+
+      config.vm.provider :virtualbox do |vb|
+        vb.memory = '2048'
+        vb.cpus = '1'
+
+        vb.customize [
+            'modifyvm', :id,
+            '--name', node_name,
+            '--nic1', 'intnet',
+            '--intnet1', 'pxe_network',
+            '--nic2', 'nat'
+        ]
+      end
+
+      config.vm.provision :shell, :path => "bootstrap-foreman.sh"
+    end
+end

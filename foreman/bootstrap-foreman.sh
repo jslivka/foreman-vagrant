@@ -25,7 +25,7 @@ if ps aux | grep "/usr/share/foreman" | grep -v grep 2> /dev/null
 then
     echo "Foreman appears to all already be installed. Exiting..."
 else
-    sudo yum -y install epel-release http://yum.theforeman.org/releases/1.9/el7/x86_64/foreman-release.rpm && \
+    sudo yum -y install epel-release http://yum.theforeman.org/releases/1.16/el7/x86_64/foreman-release.rpm && \
     sudo yum -y install foreman-installer nano nmap-ncat && \
     sudo foreman-installer
 
@@ -35,11 +35,12 @@ else
     sudo firewall-cmd --permanent --add-service=http
     sudo firewall-cmd --permanent --add-service=https
     sudo firewall-cmd --permanent --add-port=69/tcp
-    sudo firewall-cmd --permanent --add-port=67-69/udp
+    sudo firewall-cmd --permanent --add-port=67-69/udp # DHCP
     sudo firewall-cmd --permanent --add-port=53/tcp
     sudo firewall-cmd --permanent --add-port=53/udp
     sudo firewall-cmd --permanent --add-port=8443/tcp
     sudo firewall-cmd --permanent --add-port=8140/tcp
+    sudo firewall-cmd --permanent --add-port=21/tcp # TFTP
 
     sudo firewall-cmd --reload
     sudo systemctl enable firewalld

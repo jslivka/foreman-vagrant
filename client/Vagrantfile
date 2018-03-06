@@ -1,6 +1,8 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+# note: this doesn't work out of the box and needs some networking tweaks
+
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
@@ -10,10 +12,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vbguest.iso_path = "http://download.virtualbox.org/virtualbox/%{version}/VBoxGuestAdditions_%{version}.iso"
 
     config.vm.box = "c33s/empty"
-
-    if Vagrant.has_plugin?("vagrant-cachier")
-        config.cache.scope = :box
-    end
 
     config.hostmanager.enabled = true
     config.hostmanager.manage_host = true
@@ -29,25 +27,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         config.vm.provider :virtualbox do |vb|
             vb.memory = '2048'
             vb.cpus = '1'
-            vb.gui = 'true'
-
-            vb.customize [
-                'modifyvm', :id,
-                '--name', node_name,
-                '--nic1', 'intnet',
-                '--intnet1', 'pxe_network',
-                '--nic2', 'nat',
-                '--boot1', 'disk',
-                '--boot2', 'net',
-                '--boot3', 'none',
-                '--boot4', 'none'
-            ]
+            # vb.gui = 'true'
 
             # Disable question about installation disk on first boot
             vb.customize [ 'setextradata', :id, 'GUI/FirstRun', 'no' ]
         end
       end
 
-      config.vm.provision :shell, :path => "bootstrap-foreman.sh"
     end
 end

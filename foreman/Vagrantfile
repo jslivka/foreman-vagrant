@@ -4,7 +4,7 @@
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-    node_name   = "theforeman.example.com"
+    node_name = "foreman.example.com"
 
     config.vbguest.auto_update = true
     config.vbguest.iso_path = "http://download.virtualbox.org/virtualbox/%{version}/VBoxGuestAdditions_%{version}.iso"
@@ -23,19 +23,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.define node_name do |config|
 
       config.vm.hostname = node_name
-      config.vm.network "private_network", ip: "192.168.35.5", virtualbox__intnet: "pxe_network"
+      config.vm.network "private_network", ip: "192.168.35.5"
 
       config.vm.provider :virtualbox do |vb|
         vb.memory = '2048'
         vb.cpus = '1'
-
-        vb.customize [
-            'modifyvm', :id,
-            '--name', node_name,
-            '--nic1', 'intnet',
-            '--intnet1', 'pxe_network',
-            '--nic2', 'nat'
-        ]
       end
 
       config.vm.provision :shell, :path => "bootstrap-foreman.sh"

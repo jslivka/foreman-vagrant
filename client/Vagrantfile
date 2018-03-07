@@ -1,8 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# note: this doesn't work out of the box and needs some networking tweaks
-
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
@@ -27,7 +25,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         config.vm.provider :virtualbox do |vb|
             vb.memory = '2048'
             vb.cpus = '1'
-            # vb.gui = 'true'
+            vb.gui = 'true'
 
             # Disable question about installation disk on first boot
             vb.customize [ 'setextradata', :id, 'GUI/FirstRun', 'no' ]

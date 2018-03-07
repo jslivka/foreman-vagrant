@@ -9,7 +9,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vbguest.auto_update = true
     config.vbguest.iso_path = "http://download.virtualbox.org/virtualbox/%{version}/VBoxGuestAdditions_%{version}.iso"
 
-    config.vm.box = "puppetlabs/centos-7.0-64-puppet"
+    config.vm.box = "centos/7"
 
     if Vagrant.has_plugin?("vagrant-cachier")
         config.cache.scope = :box
